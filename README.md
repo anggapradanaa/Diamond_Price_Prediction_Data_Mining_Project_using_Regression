@@ -655,7 +655,7 @@ plt.show()
 
 
     
-![png](output_18_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Diamond%20Cut%20for%20Price.png'>
     
 
 
@@ -682,7 +682,7 @@ plt.show()
 
 
     
-![png](output_19_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Diamond%20Colors%20for%20Price.png'>
     
 
 
@@ -709,7 +709,7 @@ plt.show()
 
 
     
-![png](output_20_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Diamond%20Clarity%20for%20Price.png'>
     
 
 
@@ -978,7 +978,7 @@ ax = sns.pairplot(df, hue="cut", palette=cols)
 
 
     
-![png](output_27_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Analisis%20Bivariat.png'>
     
 
 
@@ -999,7 +999,7 @@ plt.show()
 
 
     
-![png](output_30_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Price%20vs%20y.png'>
     
 
 
@@ -1012,7 +1012,7 @@ plt.show()
 
 
     
-![png](output_31_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Price%20vs%20z.png'>
     
 
 
@@ -1025,7 +1025,7 @@ plt.show()
 
 
     
-![png](output_32_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Price%20vs%20Depth.png'>
     
 
 
@@ -1038,7 +1038,7 @@ plt.show()
 
 
     
-![png](output_33_0.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Price%20vs%20table.png'>
     
 
 
@@ -1283,7 +1283,7 @@ sns.heatmap(corrmat,cmap=cols,annot=True)
 
 
     
-![png](output_44_1.png)
+<img src = 'https://github.com/anggapradanaa/Sales_Prediction_Data_Mining_Project_using_Regression/blob/main/Matriks%20Korelasi.png'>
     
 
 

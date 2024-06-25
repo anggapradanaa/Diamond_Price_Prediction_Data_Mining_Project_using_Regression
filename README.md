@@ -1,17 +1,16 @@
 # 1. BUSINESS UNDERSTANDING
 
-
-```python
-
-```
+Tujuan: Memprediksi harga diamond
 
 # 2. DATA UNDERSTANDING
+
+1. y (variabel target): price
+2. x (variabel lainnya)
 
 ### ⚔️Importing Libraries
 
 
 ```python
-!pip install xgboost
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -20,6 +19,7 @@ import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.ensemble import VotingRegressor
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -38,16 +38,11 @@ from sklearn.metrics import mean_squared_error
 from sklearn import metrics
 ```
 
-    Requirement already satisfied: xgboost in c:\users\aditya p j\anaconda3\lib\site-packages (2.0.3)
-    Requirement already satisfied: numpy in c:\users\aditya p j\anaconda3\lib\site-packages (from xgboost) (1.24.3)
-    Requirement already satisfied: scipy in c:\users\aditya p j\anaconda3\lib\site-packages (from xgboost) (1.11.1)
-    
-
 ### 🛠️Loading Data
 
 
 ```python
-df = pd.read_csv(r"C:\Users\Aditya P J\Documents\Python Scripts\Data\diamonds.csv")
+df = pd.read_csv(r"C:\Users\myasu\Downloads\diamonds.csv\diamonds.csv")
 df
 ```
 
@@ -390,6 +385,7 @@ df.info()
 
 
 ```python
+#menampilkan 10 sample acak
 df.sample(10)
 ```
 
@@ -429,144 +425,144 @@ df.sample(10)
   </thead>
   <tbody>
     <tr>
-      <th>52128</th>
-      <td>52129</td>
+      <th>7717</th>
+      <td>7718</td>
+      <td>0.32</td>
+      <td>Ideal</td>
+      <td>H</td>
+      <td>VS1</td>
+      <td>61.0</td>
+      <td>56.0</td>
+      <td>580</td>
+      <td>4.43</td>
+      <td>4.45</td>
+      <td>2.71</td>
+    </tr>
+    <tr>
+      <th>17681</th>
+      <td>17682</td>
+      <td>1.44</td>
+      <td>Very Good</td>
+      <td>H</td>
+      <td>SI2</td>
+      <td>58.2</td>
+      <td>61.0</td>
+      <td>7128</td>
+      <td>7.45</td>
+      <td>7.51</td>
+      <td>4.35</td>
+    </tr>
+    <tr>
+      <th>51917</th>
+      <td>51918</td>
+      <td>0.70</td>
+      <td>Very Good</td>
+      <td>G</td>
+      <td>VS2</td>
+      <td>59.0</td>
+      <td>60.0</td>
+      <td>2437</td>
+      <td>5.76</td>
+      <td>5.83</td>
+      <td>3.42</td>
+    </tr>
+    <tr>
+      <th>52493</th>
+      <td>52494</td>
       <td>0.60</td>
       <td>Ideal</td>
       <td>G</td>
-      <td>VVS2</td>
-      <td>61.3</td>
-      <td>56.0</td>
-      <td>2467</td>
-      <td>5.43</td>
-      <td>5.46</td>
-      <td>3.34</td>
-    </tr>
-    <tr>
-      <th>20136</th>
-      <td>20137</td>
-      <td>1.22</td>
-      <td>Ideal</td>
-      <td>H</td>
-      <td>VS2</td>
-      <td>61.3</td>
-      <td>56.0</td>
-      <td>8596</td>
-      <td>6.85</td>
-      <td>6.88</td>
-      <td>4.21</td>
-    </tr>
-    <tr>
-      <th>50552</th>
-      <td>50553</td>
-      <td>0.73</td>
-      <td>Ideal</td>
-      <td>F</td>
-      <td>SI2</td>
-      <td>62.1</td>
-      <td>56.0</td>
-      <td>2276</td>
-      <td>5.77</td>
-      <td>5.80</td>
-      <td>3.59</td>
-    </tr>
-    <tr>
-      <th>45156</th>
-      <td>45157</td>
-      <td>0.50</td>
-      <td>Ideal</td>
-      <td>D</td>
-      <td>SI1</td>
-      <td>61.6</td>
-      <td>55.0</td>
-      <td>1654</td>
-      <td>5.13</td>
-      <td>5.10</td>
-      <td>3.15</td>
-    </tr>
-    <tr>
-      <th>12120</th>
-      <td>12121</td>
-      <td>0.91</td>
-      <td>Premium</td>
-      <td>D</td>
-      <td>VS2</td>
+      <td>VVS1</td>
       <td>62.0</td>
-      <td>58.0</td>
-      <td>5167</td>
-      <td>6.20</td>
-      <td>6.15</td>
-      <td>3.83</td>
+      <td>55.5</td>
+      <td>2524</td>
+      <td>5.37</td>
+      <td>5.42</td>
+      <td>3.35</td>
     </tr>
     <tr>
-      <th>25150</th>
-      <td>25151</td>
-      <td>1.50</td>
-      <td>Premium</td>
-      <td>G</td>
-      <td>VS1</td>
-      <td>60.8</td>
-      <td>61.0</td>
-      <td>13720</td>
-      <td>7.36</td>
-      <td>7.29</td>
-      <td>4.45</td>
-    </tr>
-    <tr>
-      <th>36556</th>
-      <td>36557</td>
-      <td>0.40</td>
-      <td>Premium</td>
-      <td>E</td>
+      <th>5092</th>
+      <td>5093</td>
+      <td>0.90</td>
+      <td>Good</td>
+      <td>D</td>
       <td>SI1</td>
-      <td>62.2</td>
-      <td>58.0</td>
-      <td>945</td>
-      <td>4.74</td>
-      <td>4.71</td>
-      <td>2.94</td>
+      <td>63.6</td>
+      <td>63.0</td>
+      <td>3755</td>
+      <td>6.03</td>
+      <td>6.07</td>
+      <td>3.85</td>
     </tr>
     <tr>
-      <th>12336</th>
-      <td>12337</td>
-      <td>1.10</td>
-      <td>Ideal</td>
-      <td>G</td>
-      <td>SI1</td>
-      <td>62.3</td>
-      <td>56.0</td>
-      <td>5226</td>
-      <td>6.64</td>
-      <td>6.58</td>
-      <td>4.12</td>
-    </tr>
-    <tr>
-      <th>3560</th>
-      <td>3561</td>
-      <td>1.01</td>
+      <th>16542</th>
+      <td>16543</td>
+      <td>1.22</td>
       <td>Premium</td>
       <td>H</td>
-      <td>SI1</td>
-      <td>59.2</td>
+      <td>VS2</td>
+      <td>62.3</td>
       <td>58.0</td>
-      <td>3417</td>
-      <td>6.58</td>
-      <td>6.56</td>
-      <td>3.89</td>
+      <td>6608</td>
+      <td>6.85</td>
+      <td>6.77</td>
+      <td>4.24</td>
     </tr>
     <tr>
-      <th>47408</th>
-      <td>47409</td>
-      <td>0.50</td>
+      <th>26461</th>
+      <td>26462</td>
+      <td>2.02</td>
       <td>Ideal</td>
+      <td>I</td>
+      <td>VS2</td>
+      <td>61.5</td>
+      <td>58.0</td>
+      <td>16018</td>
+      <td>8.19</td>
+      <td>8.11</td>
+      <td>5.01</td>
+    </tr>
+    <tr>
+      <th>28657</th>
+      <td>28658</td>
+      <td>0.31</td>
+      <td>Ideal</td>
+      <td>G</td>
+      <td>VVS1</td>
+      <td>60.2</td>
+      <td>58.0</td>
+      <td>676</td>
+      <td>4.37</td>
+      <td>4.43</td>
+      <td>2.65</td>
+    </tr>
+    <tr>
+      <th>376</th>
+      <td>377</td>
+      <td>1.20</td>
+      <td>Fair</td>
       <td>F</td>
-      <td>VVS2</td>
-      <td>62.3</td>
-      <td>57.0</td>
-      <td>1850</td>
-      <td>5.06</td>
-      <td>5.08</td>
-      <td>3.16</td>
+      <td>I1</td>
+      <td>64.6</td>
+      <td>56.0</td>
+      <td>2809</td>
+      <td>6.73</td>
+      <td>6.66</td>
+      <td>4.33</td>
+    </tr>
+    <tr>
+      <th>9580</th>
+      <td>9581</td>
+      <td>1.08</td>
+      <td>Premium</td>
+      <td>G</td>
+      <td>SI2</td>
+      <td>62.9</td>
+      <td>59.0</td>
+      <td>4627</td>
+      <td>6.57</td>
+      <td>6.53</td>
+      <td>4.12</td>
     </tr>
   </tbody>
 </table>
@@ -576,7 +572,7 @@ df.sample(10)
 
 ### Deskripsi Data
 
-Dataset berikut berisi informasi harga dan atribut lainnya.
+Dataset berikut berisi informasi tentang harga berlian dan atribut lainnya.
 
 ~ carat (0.2-5.01): Carat adalah berat fisik berlian yang diukur dalam carat metrik. Satu carat sama dengan 0.20 gram dan dibagi menjadi 100 poin.
 
@@ -584,11 +580,11 @@ Dataset berikut berisi informasi harga dan atribut lainnya.
 
 ~ color (dari J (worst) hingga D (best)): Warna berlian berkualitas permata muncul dalam berbagai nuansa. Dalam rentang dari tidak berwarna hingga kuning muda atau coklat muda. Berlian yang tidak berwarna adalah yang paling langka. Warna alami lainnya (seperti biru, merah, pink) dikenal sebagai "fancy," dan penilaian warnanya berbeda dari berlian putih yang tidak berwarna.
 
-~ clarity (I1 (worst), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (best)): Berlian dapat memiliki karakteristik internal yang dikenal sebagai inklusi atau karakteristik eksternal yang dikenal sebagai cacat. Berlian tanpa inklusi atau cacat sangat langka; namun, sebagian besar karakteristik hanya dapat dilihat dengan pembesaran.
+~ clarity (I1 (worst), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (best)): Kejernihan berlian, yang menunjukkan seberapa bebas berlian dari inklusi (ketidaksempurnaan internal) dan cacat (ketidaksempurnaan eksternal).
 
 ~ depth (43-79): Ini adalah persentase kedalaman total yang setara dengan z / mean(x, y) = 2 * z / (x + y). Kedalaman berlian adalah tingginya (dalam milimeter) yang diukur dari culet (ujung bawah) hingga meja (permukaan atas datar) seperti yang disebutkan dalam diagram berlabel di atas.
 
-~ table (43-95): Ini adalah lebar bagian atas berlian relatif terhadap titik terlebar. Ini memberikan berlian kilauan dan kecemerlangan yang menakjubkan dengan memantulkan cahaya ke segala arah yang ketika dilihat oleh pengamat, tampak berkilau.
+~ table (43-95): Lebar bagian atas berlian (meja) sebagai persentase dari lebar rata-rata. Meja berlian yang ideal berkontribusi pada kecemerlangan berlian.
 
 ~ price ($326 - $18826): Ini adalah harga berlian dalam dolar AS. Ini adalah kolom target kita dalam dataset ini.
 
@@ -629,11 +625,13 @@ df.info()
     
 
 Catatan :
-Terdapat total data adalah 53940, berdasarkan informasi mengenai jumlah isian perkolom, terlihat bahwa jumlah baris adalah 53840. Jadi data tersebut tidak memiliki missing value. 
+Terdapat total data adalah 53940, berdasarkan informasi mengenai jumlah isian perkolom, terlihat bahwa jumlah baris adalah 53940. Jadi data tersebut tidak memiliki missing value. 
 
 Tipe data (cut, color, dan clarity) adalah object, sehingga perlu di convert menjadi variabel numerik Sebelum kita memasukkan data ke dalam algoritma. 
 
 ### Mengevaluasi fitur kategorikal
+
+Melihat distribusi kolom cut,color, dan clarity terhadap price
 
 
 ```python
@@ -657,7 +655,7 @@ plt.show()
 
 
     
-![png](output_16_0.png)
+![png](output_18_0.png)
     
 
 
@@ -684,7 +682,7 @@ plt.show()
 
 
     
-![png](output_17_0.png)
+![png](output_19_0.png)
     
 
 
@@ -711,24 +709,24 @@ plt.show()
 
 
     
-![png](output_18_0.png)
+![png](output_20_0.png)
     
 
 
 Catatan :
-Potongan "Ideal" diamonds adalah yang paling banyak jumlahnya, sedangkan "Fair" diamonds adalah yang paling sedikit jumlahnya. Lebih banyak diamonds dari semua jenis potongan untuk kategori harga yang lebih rendah.
+Potongan berlian "Ideal" adalah yang paling banyak jumlahnya, sedangkan potongan "Fair" adalah yang paling sedikit. 
 
-Dengan warna "J" diamonds, yang merupakan yang terburuk, sangat langka, namun "H" dan "G" diamonds lebih banyak jumlahnya meskipun kualitasnya juga rendah.
+Berlian dengan warna "J", yang merupakan yang terburuk, adalah yang paling langka, namun berlian dengan warna "H" dan "G" lebih banyak jumlahnya meskipun kualitasnya juga lebih rendah.
 
-Dengan kejelasan "IF" diamonds, yang merupakan yang terbaik, serta "I1" diamonds, yang merupakan yang terburuk, sangat langka, sementara yang lainnya sebagian besar memiliki kejelasan di antara keduanya.
+Berlian dengan kejernihan "IF" yang merupakan yang terbaik serta "I1" yang merupakan yang terburuk sangat langka, sedangkan sisanya sebagian besar memiliki kejernihan yang berada di antara keduanya.
 
 ### Statistik Deskriptif
 
 
 ```python
 # Melakukan Analisis Univariat untuk deskripsi statistik dan pemahaman tentang sebaran data
-df.describe().T
-
+descriptive_stats = df.describe().T
+descriptive_stats
 ```
 
 
@@ -857,10 +855,119 @@ df.describe().T
 
 
 
-Catatan :
+
+```python
+# Melihat mean dan median dari kolom 'price'
+mean_price = descriptive_stats.loc['price', 'mean']
+median_price = df['price'].median()
+
+print(f"Mean price: {mean_price}")
+print(f"Median price: {median_price}")
+
+if mean_price > median_price:
+    print("Distribusi harga condong ke kanan.")
+else:
+    print("Distribusi harga tidak condong ke kanan.")
+
+# Menghitung skewness
+price_skewness = df['price'].skew()
+print(f"Skewness dari harga: {price_skewness}")
+
+if price_skewness > 0:
+    print("Distribusi harga condong ke kanan.")
+else:
+    print("Distribusi harga tidak condong ke kanan.")
+
+```
+
+    Mean price: 3932.799721913237
+    Median price: 2401.0
+    Distribusi harga condong ke kanan.
+    Skewness dari harga: 1.618395283383529
+    Distribusi harga condong ke kanan.
     
-    "Price" seperti yang diharapkan cenderung condong ke kanan, dengan jumlah titik data yang lebih banyak di sebelah kiri.
-Di bawah fitur dimensional 'x', 'y', & 'z' - nilai minimum adalah 0 sehingga membuat titik data tersebut menjadi objek berlian 1D atau 2D yang tidak masuk akal - oleh karena itu perlu untuk diimputasi dengan nilai yang sesuai atau dihapus sama sekali.
+
+
+```python
+# Melihat nilai minimum dari kolom 'x', 'y', dan 'z'
+min_x = descriptive_stats.loc['x', 'min']
+min_y = descriptive_stats.loc['y', 'min']
+min_z = descriptive_stats.loc['z', 'min']
+
+print(f"Nilai minimum untuk 'x': {min_x}")
+print(f"Nilai minimum untuk 'y': {min_y}")
+print(f"Nilai minimum untuk 'z': {min_z}")
+
+# Menggunakan .min() untuk konfirmasi
+print(df[['x', 'y', 'z']].min())
+
+# Mengidentifikasi baris dengan nilai 0 pada kolom 'x', 'y', atau 'z'
+rows_with_zero = df[(df['x'] == 0) | (df['y'] == 0) | (df['z'] == 0)]
+print(rows_with_zero)
+
+# Menyimpulkan apakah ada nilai yang tidak masuk akal
+if (min_x == 0) or (min_y == 0) or (min_z == 0):
+    print("Ada nilai 0 pada kolom 'x', 'y', atau 'z' yang membuat data tidak masuk akal.")
+else:
+    print("Tidak ada nilai 0 pada kolom 'x', 'y', atau 'z'.")
+```
+
+    Nilai minimum untuk 'x': 0.0
+    Nilai minimum untuk 'y': 0.0
+    Nilai minimum untuk 'z': 0.0
+    x    0.0
+    y    0.0
+    z    0.0
+    dtype: float64
+           Unnamed: 0  carat        cut color clarity  depth  table  price     x  \
+    2207         2208   1.00    Premium     G     SI2   59.1   59.0   3142  6.55   
+    2314         2315   1.01    Premium     H      I1   58.1   59.0   3167  6.66   
+    4791         4792   1.10    Premium     G     SI2   63.0   59.0   3696  6.50   
+    5471         5472   1.01    Premium     F     SI2   59.2   58.0   3837  6.50   
+    10167       10168   1.50       Good     G      I1   64.0   61.0   4731  7.15   
+    11182       11183   1.07      Ideal     F     SI2   61.6   56.0   4954  0.00   
+    11963       11964   1.00  Very Good     H     VS2   63.3   53.0   5139  0.00   
+    13601       13602   1.15      Ideal     G     VS2   59.2   56.0   5564  6.88   
+    15951       15952   1.14       Fair     G     VS1   57.5   67.0   6381  0.00   
+    24394       24395   2.18    Premium     H     SI2   59.4   61.0  12631  8.49   
+    24520       24521   1.56      Ideal     G     VS2   62.2   54.0  12800  0.00   
+    26123       26124   2.25    Premium     I     SI1   61.3   58.0  15397  8.52   
+    26243       26244   1.20    Premium     D    VVS1   62.1   59.0  15686  0.00   
+    27112       27113   2.20    Premium     H     SI1   61.2   59.0  17265  8.42   
+    27429       27430   2.25    Premium     H     SI2   62.8   59.0  18034  0.00   
+    27503       27504   2.02    Premium     H     VS2   62.7   53.0  18207  8.02   
+    27739       27740   2.80       Good     G     SI2   63.8   58.0  18788  8.90   
+    49556       49557   0.71       Good     F     SI2   64.1   60.0   2130  0.00   
+    49557       49558   0.71       Good     F     SI2   64.1   60.0   2130  0.00   
+    51506       51507   1.12    Premium     G      I1   60.4   59.0   2383  6.71   
+    
+              y    z  
+    2207   6.48  0.0  
+    2314   6.60  0.0  
+    4791   6.47  0.0  
+    5471   6.47  0.0  
+    10167  7.04  0.0  
+    11182  6.62  0.0  
+    11963  0.00  0.0  
+    13601  6.83  0.0  
+    15951  0.00  0.0  
+    24394  8.45  0.0  
+    24520  0.00  0.0  
+    26123  8.42  0.0  
+    26243  0.00  0.0  
+    27112  8.37  0.0  
+    27429  0.00  0.0  
+    27503  7.95  0.0  
+    27739  8.85  0.0  
+    49556  0.00  0.0  
+    49557  0.00  0.0  
+    51506  6.67  0.0  
+    Ada nilai 0 pada kolom 'x', 'y', atau 'z' yang membuat data tidak masuk akal.
+    
+
+Catatan :
+1. "Price" sesuai perkiraan condong ke kanan, dengan lebih banyak titik data di sebelah kiri.
+2. Pada fitur dimensional 'x', 'y', & 'z', nilai minimum adalah 0 sehingga membuat titik data tersebut menjadi objek berlian 1D atau 2D yang tidak masuk akal - sehingga perlu diimputasi dengan nilai yang sesuai atau dihapus seluruhnya.
 
 
 ```python
@@ -871,7 +978,7 @@ ax = sns.pairplot(df, hue="cut", palette=cols)
 
 
     
-![png](output_23_0.png)
+![png](output_27_0.png)
     
 
 
@@ -879,7 +986,7 @@ Catatan:
 1. Terdapat fitur "unnamed" yang tidak berguna, yang merupakan indeks dan perlu dihilangkan.
 2. Terdapat outlier yang perlu ditangani karena dapat mempengaruhi kinerja model
 3. Kolom "y" dan "z" memiliki beberapa outlier dimensional dalam dataset dan perlu dihilangkan.
-4. Fitur "depth" & "table" seharusnya dibatasi setelah diperiksa Plot Garis.
+4. Kolom "depth" & "table" seharusnya dibatasi setelah diperiksa Plot Garis.
 
 ### Memeriksa Potensi Outlier
 
@@ -892,7 +999,7 @@ plt.show()
 
 
     
-![png](output_26_0.png)
+![png](output_30_0.png)
     
 
 
@@ -905,7 +1012,7 @@ plt.show()
 
 
     
-![png](output_27_0.png)
+![png](output_31_0.png)
     
 
 
@@ -918,7 +1025,7 @@ plt.show()
 
 
     
-![png](output_28_0.png)
+![png](output_32_0.png)
     
 
 
@@ -931,7 +1038,7 @@ plt.show()
 
 
     
-![png](output_29_0.png)
+![png](output_33_0.png)
     
 
 
@@ -1176,7 +1283,7 @@ sns.heatmap(corrmat,cmap=cols,annot=True)
 
 
     
-![png](output_40_1.png)
+![png](output_44_1.png)
     
 
 
@@ -1184,7 +1291,7 @@ Catatan:
 
 Fitur "carat", "x", "y", "z" memiliki korelasi yang tinggi dengan variabel target kita, yaitu harga.
 
-Fitur "cut", "clarity", "depth" memiliki korelasi yang sangat rendah (<|0.1|) sehingga mungkin dapat dihapus, meskipun karena hanya ada beberapa fitur yang dipilih, kita tidak akan melakukannya.
+Fitur "cut", "clarity", "depth" memiliki korelasi yang sangat rendah (<|0.1|) sehingga mungkin dapat dihapus, meskipun karena hanya ada beberapa fitur yang dipilih, kita tidak akan melakukannya (tetap menggunakannya).
 
 # 4. MODEL BUILDING
 
@@ -1231,8 +1338,11 @@ for pipe in pipelines:
     pipe.fit(x_train, y_train)
 ```
 
+# 5. EVALUATION
+
 
 ```python
+#hasil tiap-tiap jenis model
 cv_results_rms = []
 for i, model in enumerate(pipelines):
     cv_score = cross_val_score(model, x_train,y_train,scoring="neg_root_mean_squared_error", cv=12)
@@ -1242,13 +1352,13 @@ for i, model in enumerate(pipelines):
 
     LinearRegression: 1383.854012 
     Lasso: 1366.991298 
-    DecisionTree: 739.289291 
-    RandomForest: 548.841032 
+    DecisionTree: 738.917667 
+    RandomForest: 548.624640 
     KNeighbors: 816.559263 
     XGBRegressor: 548.346850 
     
 
-# 5. EVALUATION
+## XGBClassifier
 
 
 ```python
@@ -1263,6 +1373,208 @@ print("Adjusted R^2:",1 - (1-metrics.r2_score(y_test, pred))*(len(y_test)-1)/(le
     
 
 
+```python
+# Membuat DataFrame comparison_df dengan data aktual dan prediksi
+comparison_df = pd.DataFrame({'Actual': y_test, 'Predicted': pred})
+
+# Menampilkan tabel comparison_df
+print("Tabel Perbandingan Harga Asli dan Harga Prediksi:")
+print(comparison_df)
+
+# Menambahkan kolom selisih antara harga asli dan harga prediksi
+comparison_df['Difference'] = comparison_df['Actual'] - comparison_df['Predicted']
+
+# Menampilkan tabel dengan kolom selisih
+print("\nTabel Perbandingan Harga Asli, Harga Prediksi, dan Selisih:")
+print(comparison_df)
+
+# Opsional: Menyimpan tabel ke dalam file CSV
+comparison_df.to_csv(r'C:\Users\myasu\Downloads\perbandingan harga diamonds.csv', index=False)
+```
+
+    Tabel Perbandingan Harga Asli, Harga Prediksi, dan Selisih:
+           Actual     Predicted   Difference
+    31712     771    860.958082   -89.958082
+    19865    8419   8730.078945  -311.078945
+    42610     505    521.556190   -16.556190
+    29785     709    707.374216     1.625784
+    20340    8739   9841.110078 -1102.110078
+    ...       ...           ...          ...
+    50799    2306   2367.419414   -61.419414
+    40238    1124   1187.310403   -63.310403
+    23860   11951  11184.547598   766.452402
+    11809    5090   4660.840781   429.159219
+    39776    1094   1007.533412    86.466588
+    
+    [10782 rows x 3 columns]
+    
+
+## Voting Regressor
+
+
+```python
+# Membuat regressor voting dengan XGBRegressor dan RandomForestRegressor
+voting_regressor = VotingRegressor(estimators=[
+    ('xgb', XGBRegressor()),
+    ('rf', RandomForestRegressor())
+])
+```
+
+
+```python
+# Standarisasi data
+scaler = StandardScaler()
+x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled = scaler.transform(x_test)
+
+# Melatih regressor voting
+voting_regressor.fit(x_train_scaled, y_train)
+
+# Memprediksi data tes
+pred_voting_regressor = voting_regressor.predict(x_test_scaled)
+
+# Evaluasi model
+print("R^2:", metrics.r2_score(y_test, pred_voting_regressor))
+print("Adjusted R^2:", 1 - (1 - metrics.r2_score(y_test, pred_voting_regressor)) * (len(y_test) - 1) / (len(y_test) - x_test.shape[1] - 1))
+```
+
+    R^2: 0.9832147486730024
+    Adjusted R^2: 0.9832007246048681
+    
+
+
+```python
+# Membuat DataFrame comparison_df dengan data aktual dan prediksi
+comparison_df_voting_regressor = pd.DataFrame({'Actual': y_test, 'Predicted': pred_voting_regressor})
+
+# Menambahkan kolom selisih antara harga asli dan harga prediksi
+comparison_df_voting_regressor['Difference'] = comparison_df_voting_regressor['Actual'] - comparison_df_voting_regressor['Predicted']
+
+# Menampilkan tabel comparison_df dengan kolom selisih
+print("Tabel Perbandingan Harga Asli, Harga Prediksi, dan Selisih:")
+print(comparison_df_voting_regressor)
+```
+
+    Tabel Perbandingan Harga Asli, Harga Prediksi, dan Selisih:
+           Actual     Predicted   Difference
+    31712     771    862.378082   -91.378082
+    19865    8419   8712.408945  -293.408945
+    42610     505    519.820357   -14.820357
+    29785     709    706.599216     2.400784
+    20340    8739   9958.460078 -1219.460078
+    ...       ...           ...          ...
+    50799    2306   2332.244414   -26.244414
+    40238    1124   1191.995403   -67.995403
+    23860   11951  11354.317598   596.682402
+    11809    5090   4632.915781   457.084219
+    39776    1094   1008.563412    85.436588
+    
+    [10782 rows x 3 columns]
+    
+
+## Rata-Rata
+
+
+```python
+from sklearn.metrics import mean_squared_error
+```
+
+
+```python
+# Membuat model
+xgb_model = XGBRegressor()
+rf_model = RandomForestRegressor()
+
+# Standarisasi data
+scaler = StandardScaler()
+x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled = scaler.transform(x_test)
+
+# Melatih model
+xgb_model.fit(x_train_scaled, y_train)
+rf_model.fit(x_train_scaled, y_train)
+```
+
+
+
+
+<style>#sk-container-id-1 {color: black;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RandomForestRegressor()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestRegressor</label><div class="sk-toggleable__content"><pre>RandomForestRegressor()</pre></div></div></div></div></div>
+
+
+
+
+```python
+# Memprediksi data tes
+xgb_pred = xgb_model.predict(x_test_scaled)
+rf_pred = rf_model.predict(x_test_scaled)
+
+# Menghitung RMSE masing-masing model
+xgb_rmse = mean_squared_error(y_test, xgb_pred, squared=False)
+rf_rmse = mean_squared_error(y_test, rf_pred, squared=False)
+
+# Menghitung rata-rata prediksi dari kedua model
+combined_pred = (xgb_pred + rf_pred) / 2
+
+# Evaluasi model gabungan
+print("XGB RMSE:", xgb_rmse)
+print("RF RMSE:", rf_rmse)
+print("Combined RMSE:", mean_squared_error(y_test, combined_pred, squared=False))
+print("R^2:", metrics.r2_score(y_test, combined_pred))
+print("Adjusted R^2:", 1 - (1 - metrics.r2_score(y_test, combined_pred)) * (len(y_test) - 1) / (len(y_test) - x_test.shape[1] - 1))
+```
+
+    XGB RMSE: 536.7066529757042
+    RF RMSE: 543.5824976698756
+    Combined RMSE: 519.8018038674221
+    R^2: 0.983237161421462
+    Adjusted R^2: 0.9832231560791665
+    
+
+
+```python
+# Membuat DataFrame comparison_df dengan data aktual dan prediksi gabungan
+comparison_df_combine = pd.DataFrame({'Actual': y_test, 'Predicted': combined_pred})
+
+# Menambahkan kolom selisih antara harga asli dan harga prediksi
+comparison_df_combine['Difference'] = comparison_df_combine['Actual'] - comparison_df_combine['Predicted']
+
+# Menampilkan tabel comparison_df dengan kolom selisih
+print("\nTabel Perbandingan Harga Asli, Harga Prediksi, dan Selisih:")
+print(comparison_df_combine)
+```
+
+    
+    Tabel Perbandingan Harga Asli, Harga Prediksi, dan Selisih:
+           Actual     Predicted   Difference
+    31712     771    864.883082   -93.883082
+    19865    8419   8731.213945  -312.213945
+    42610     505    519.401190   -14.401190
+    29785     709    706.899216     2.100784
+    20340    8739  10009.770078 -1270.770078
+    ...       ...           ...          ...
+    50799    2306   2368.699414   -62.699414
+    40238    1124   1188.300403   -64.300403
+    23860   11951  11251.547598   699.452402
+    11809    5090   4659.280781   430.719219
+    39776    1094   1004.418412    89.581588
+    
+    [10782 rows x 3 columns]
+    
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
 
 
 ```python
